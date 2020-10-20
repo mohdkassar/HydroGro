@@ -9,13 +9,15 @@ exports.create = (req, res) => {
       message: "Name can not be empty",
     });
   }
-
-  // Create a Note
+  // Create a User
   const user = new User({
     name: req.body.name,
+    email: req.body.email,
+    systemID: req.body.systemID,
+    userName: req.body.userName,
   });
 
-  // Save Note in the database
+  // Save User in the database
   user
     .save()
     .then((data) => {
@@ -28,10 +30,21 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve and return all notes from the database.
+// Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
   User.find()
     .then((users) => {
+      // mqttClinet.publish(
+      //   "test",
+      //   JSON.stringify({
+      //     message: "data",
+      //     SystemID: users[0]._id,
+      //     Data: {
+      //       EC: "0.4",
+      //       pH: "6.8",
+      //     },
+      //   }) //convert number to string
+      // );
       res.send(users);
     })
     .catch((err) => {
@@ -41,7 +54,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single note with a noteId
+// Find a single user using ID
 exports.findOne = (req, res) => {
   User.findById(req.params.userID)
     .then((user) => {
@@ -64,7 +77,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Update a note identified by the noteId in the request
+// Update a User identified by the userId in the request
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body.name) {
@@ -73,7 +86,7 @@ exports.update = (req, res) => {
     });
   }
 
-  // Find note and update it with the request body
+  // Find user and update it with the request body
   Note.findByIdAndUpdate(
     req.params.userID,
     {
@@ -101,7 +114,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a note with the specified noteId in the request
+// Delete a user with the specified userId in the request
 exports.delete = (req, res) => {
   User.findByIdAndRemove(req.params.userID)
     .then((user) => {

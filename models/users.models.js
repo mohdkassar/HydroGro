@@ -19,10 +19,12 @@ var Schema = mongoose.Schema(
       index: true,
     },
     name: String,
-    bio: String,
     image: String,
-    hash: String,
-    salt: String,
+    systemID: {
+      type: Number,
+      unique: true,
+      required: [true, "can't be blank"],
+    },
   },
   { timestamps: true }
 );
