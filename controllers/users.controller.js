@@ -34,17 +34,17 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   User.find()
     .then((users) => {
-      // mqttClinet.publish(
-      //   "test",
-      //   JSON.stringify({
-      //     message: "data",
-      //     SystemID: users[0]._id,
-      //     Data: {
-      //       EC: "0.4",
-      //       pH: "6.8",
-      //     },
-      //   }) //convert number to string
-      // );
+      mqttClinet.publish(
+        "test",
+        JSON.stringify({
+          message: "data",
+          SystemID: users[0]._id,
+          Data: {
+            EC: "0.4",
+            pH: "6.8",
+          },
+        }) //convert number to string
+      );
       res.send(users);
     })
     .catch((err) => {

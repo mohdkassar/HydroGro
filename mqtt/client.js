@@ -1,4 +1,4 @@
-const systems = require("../controllers/systemData.controller.js");
+const SystemData = require("../models/systemData.models");
 
 // MQTT broker
 var mqtt = require("mqtt");
@@ -27,7 +27,20 @@ client.on("message", function (topic, message) {
           user_id: mqttMessage.SystemID,
         },
       };
-      systems.create(req);
+      const systemData = new SystemData({
+        user_id: mqttMessage.SystemID,
+        data: mqttMessage.Data,
+      });
+
+      // Save Note in the database
+      systemData
+        .save()
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
   }
 });
