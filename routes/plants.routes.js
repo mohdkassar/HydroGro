@@ -1,9 +1,9 @@
 module.exports = (app) => {
   const plants = require("../controllers/plants.controller.js");
 
-  // Retrieve all Notes
+  // Retrieve all plant profiles
   app.get("/plants", plants.findAll);
 
-  // Retrieve a single Note with noteId
-  app.get("/plants/:plantID", plants.findOne);
+  // Retrieve a single plant profile with plantID
+  app.get("/plants/:plantName", plants.findOne);
 };

@@ -1,5 +1,6 @@
 const User = require("../models/users.models");
 const mqttClinet = require("../mqtt/client");
+const plantProfileModels = require("../models/plantProfile.models");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -14,7 +15,8 @@ exports.create = (req, res) => {
     name: req.body.name,
     email: req.body.email,
     systemID: req.body.systemID,
-    userName: req.body.userName,
+    username: req.body.username,
+    password: req.body.password,
   });
 
   // Save User in the database
@@ -50,6 +52,111 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving users.",
+      });
+    });
+};
+
+exports.signin = (req, res) => {
+  User.findOne({ username: req.body.username }, (err, user) => {
+    if (!user) res.json({ message: "Login failed, user not found" });
+
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      if (err) throw err;
+      if (!isMatch)
+        return res.status(400).json({
+          message: "Wrong Password",
+        });
+      res.status(200).send("Logged in successfully");
+    });
+  });
+};
+
+exports.setup = (req, res) => {
+  User.findById(req.params.userID)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.userID,
+        });
+      }
+      plantProfileModels
+        .findOne({ plant_name: req.body.tray1 })
+        .then((profile1) => {
+          if (!profile1) {
+            return res.status(404).send({
+              message: "User not found with name " + req.body.tray1,
+            });
+          }
+          plantProfileModels
+            .findOne({ plant_name: req.body.tray2 })
+            .then((profile2) => {
+              if (!profile2) {
+                return res.status(404).send({
+                  message: "User not found with name " + req.body.tray2,
+                });
+              }
+              var mqttMessage = {
+                message: "SystemSetup",
+                SystemID: user.systemID,
+                Data: {
+                  Tray1: {
+                    EC1_min: profile1.EC1_min,
+                    EC1_max: profile1.EC1_max,
+                    EC2_min: profile1.EC2_min,
+                    EC2_max: profile1.EC2_max,
+                    EC3_min: profile1.EC3_min,
+                    EC3_max: profile1.EC3_max,
+                    pH_min: profile1.pH_min,
+                    pH_max: profile1.pH_max,
+                  },
+                  Tray2: {
+                    EC1_min: profile2.EC1_min,
+                    EC1_max: profile2.EC1_max,
+                    EC2_min: profile2.EC2_min,
+                    EC2_max: profile2.EC2_max,
+                    EC3_min: profile2.EC3_min,
+                    EC3_max: profile2.EC3_max,
+                    pH_min: profile2.pH_min,
+                    pH_max: profile2.pH_max,
+                  },
+                },
+              };
+              mqttClinet.publish(
+                user.systemID,
+                JSON.stringify(mqttMessage) //convert number to string
+              );
+              res.status(200).json(mqttMessage);
+            })
+            .catch((err) => {
+              if (err.kind === "ObjectId") {
+                return res.status(404).send({
+                  message: "User not found with name " + req.body.tray2,
+                });
+              }
+              return res.status(500).send({
+                message: "User not found with name " + req.body.tray2,
+              });
+            });
+        })
+        .catch((err) => {
+          if (err.kind === "ObjectId") {
+            return res.status(404).send({
+              message: "User not found with name " + req.body.tray1,
+            });
+          }
+          return res.status(500).send({
+            message: "User not found with name " + req.body.tray1,
+          });
+        });
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.userID,
+        });
+      }
+      return res.status(500).send({
+        message: "User not found with id " + req.params.userID,
       });
     });
 };

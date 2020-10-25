@@ -22,11 +22,11 @@ exports.findAll = (req, res) => {
 // Find a single user using ID
 exports.findOne = (req, res) => {
   plantProfileModels
-    .findById(req.params.plantID)
+    .findOne({ plant_name: req.params.plantName })
     .then((profile) => {
       if (!profile) {
         return res.status(404).send({
-          message: "User not found with id " + req.params.plantID,
+          message: "User not found with name " + req.params.plantName,
         });
       }
       res.send(profile);
@@ -34,11 +34,11 @@ exports.findOne = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "User not found with id " + req.params.plantID,
+          message: "User not found with name " + req.params.plantName,
         });
       }
       return res.status(500).send({
-        message: "User not found with id " + req.params.plantID,
+        message: "User not found with name " + req.params.plantName,
       });
     });
 };
