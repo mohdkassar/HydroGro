@@ -130,7 +130,29 @@ exports.setup = (req, res) => {
                 user.systemID,
                 JSON.stringify(mqttMessage) //convert number to string
               );
-              res.status(200).json(mqttMessage);
+              User.findOneAndUpdate(
+                { systemID: req.params.userID },
+                { tray1: req.body.tray1, tray2: req.body.tray2 },
+                { new: true }
+              )
+                .then((user) => {
+                  if (!user) {
+                    return res.status(404).send({
+                      message: "User not found with id " + req.params.userID,
+                    });
+                  }
+                  res.status(200).json({ Message: mqttMessage, User: user });
+                })
+                .catch((err) => {
+                  if (err.kind === "ObjectId") {
+                    return res.status(404).send({
+                      message: "User not found with id " + req.params.userID,
+                    });
+                  }
+                  return res.status(500).send({
+                    message: "User not found with id " + req.params.userID,
+                  });
+                });
             })
             .catch((err) => {
               if (err.kind === "ObjectId") {

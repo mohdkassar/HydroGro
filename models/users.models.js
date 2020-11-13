@@ -30,6 +30,8 @@ var Schema = mongoose.Schema(
       unique: true,
       required: [true, "can't be blank"],
     },
+    tray1: String,
+    tray2: String,
   },
   { timestamps: true }
 );

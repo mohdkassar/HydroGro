@@ -38,6 +38,8 @@ exports.getLatestSystemValues = (req, res) => {
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
+          docs[0].data[0].PlantName = user.tray1;
+          docs[0].data[1].PlantName = user.tray2;
           res.send(docs);
         });
     })
