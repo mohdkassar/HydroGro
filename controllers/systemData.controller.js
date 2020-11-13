@@ -30,11 +30,11 @@ exports.create = (req, res) => {
 };
 
 exports.getLatestSystemValues = (req, res) => {
-  User.findById(req.params.userID)
+  User.findOne({ systemID: req.params.userID })
     .then((user) => {
       if (!user) {
       }
-      SystemData.find({ user_id: user._id })
+      SystemData.find({ user_id: user.systemID })
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {

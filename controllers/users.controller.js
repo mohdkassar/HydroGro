@@ -73,7 +73,7 @@ exports.signin = (req, res) => {
 };
 
 exports.setup = (req, res) => {
-  User.findById(req.params.userID)
+  User.findOne({ systemID: req.params.userID })
     .then((user) => {
       if (!user) {
         return res.status(404).send({
