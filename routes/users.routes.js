@@ -11,7 +11,7 @@ module.exports = (app) => {
   app.get("/users/:userID", users.findOne);
 
   // User login
-  app.get("/users/login", users.signin);
+  app.post("/users/login", users.signin);
 
   // System SetUp
   app.post("/users/system_setup/:userID", users.setup);
