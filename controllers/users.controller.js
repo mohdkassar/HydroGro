@@ -168,7 +168,7 @@ exports.setup = (req, res) => {
 
 // Find a single user using ID
 exports.findOne = (req, res) => {
-  User.findById(req.params.userID)
+  User.findOne({ systemID: req.params.userID })
     .then((user) => {
       if (!user) {
         return res.status(404).send({
@@ -199,7 +199,7 @@ exports.update = (req, res) => {
   }
 
   // Find user and update it with the request body
-  Note.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.params.userID,
     {
       name: req.body.name,
