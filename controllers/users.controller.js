@@ -58,7 +58,8 @@ exports.findAll = (req, res) => {
 
 exports.signin = (req, res) => {
   User.findOne({ username: req.body.username }, (err, user) => {
-    if (!user) res.json({ message: "Login failed, user not found" });
+    if (!user)
+      res.status(400).json({ message: "Login failed, user not found" });
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (err) throw err;
@@ -66,7 +67,7 @@ exports.signin = (req, res) => {
         return res.status(400).json({
           message: "Wrong Password",
         });
-      res.status(200).send("Logged in successfully");
+      res.status(200).json({ SystemID: user.systemID });
     });
   });
 };
@@ -84,7 +85,7 @@ exports.setup = (req, res) => {
         .then((profile1) => {
           if (!profile1) {
             return res.status(404).send({
-              message: "User not found with name " + req.body.tray1,
+              message: "Plant not found with name " + req.body.tray1,
             });
           }
           plantProfileModels
@@ -92,34 +93,38 @@ exports.setup = (req, res) => {
             .then((profile2) => {
               if (!profile2) {
                 return res.status(404).send({
-                  message: "User not found with name " + req.body.tray2,
+                  message: "Plant not found with name " + req.body.tray2,
                 });
               }
               var mqttMessage = {
                 message: "SystemSetup",
                 SystemID: user.systemID,
-                Data: {
-                  Tray1: {
-                    EC1_min: profile1.EC1_min,
-                    EC1_max: profile1.EC1_max,
-                    EC2_min: profile1.EC2_min,
-                    EC2_max: profile1.EC2_max,
-                    EC3_min: profile1.EC3_min,
-                    EC3_max: profile1.EC3_max,
-                    pH_min: profile1.pH_min,
-                    pH_max: profile1.pH_max,
+                Data: [
+                  {
+                    Tray1: {
+                      EC1_min: profile1.EC1_min,
+                      EC1_max: profile1.EC1_max,
+                      EC2_min: profile1.EC2_min,
+                      EC2_max: profile1.EC2_max,
+                      EC3_min: profile1.EC3_min,
+                      EC3_max: profile1.EC3_max,
+                      pH_min: profile1.pH_min,
+                      pH_max: profile1.pH_max,
+                    },
                   },
-                  Tray2: {
-                    EC1_min: profile2.EC1_min,
-                    EC1_max: profile2.EC1_max,
-                    EC2_min: profile2.EC2_min,
-                    EC2_max: profile2.EC2_max,
-                    EC3_min: profile2.EC3_min,
-                    EC3_max: profile2.EC3_max,
-                    pH_min: profile2.pH_min,
-                    pH_max: profile2.pH_max,
+                  {
+                    Tray2: {
+                      EC1_min: profile2.EC1_min,
+                      EC1_max: profile2.EC1_max,
+                      EC2_min: profile2.EC2_min,
+                      EC2_max: profile2.EC2_max,
+                      EC3_min: profile2.EC3_min,
+                      EC3_max: profile2.EC3_max,
+                      pH_min: profile2.pH_min,
+                      pH_max: profile2.pH_max,
+                    },
                   },
-                },
+                ],
               };
               mqttClinet.publish(
                 user.systemID,
