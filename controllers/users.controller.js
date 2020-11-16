@@ -36,6 +36,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   User.find()
     .then((users) => {
+      console.log("THEN");
       mqttClinet.publish(
         "test",
         JSON.stringify({
@@ -45,7 +46,14 @@ exports.findAll = (req, res) => {
             EC: "0.4",
             pH: "6.8",
           },
-        }) //convert number to string
+        }),
+        {},
+        (err, res) => {
+          if (err) console.log(err);
+          else {
+            console.log(res);
+          }
+        } //convert number to string
       );
       res.send(users);
     })

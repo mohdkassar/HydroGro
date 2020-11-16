@@ -2,7 +2,7 @@ const SystemData = require("../models/systemData.models");
 
 // MQTT broker
 var mqtt = require("mqtt");
-var client = mqtt.connect("http://18.234.249.165:1883", {
+var client = mqtt.connect("http://34.201.69.234:1883", {
   //open connection with your broker in AWS via websocket
   username: "shabeb1", //authenticate your broker with username and password
   password: "1234_Kassar",
@@ -12,6 +12,8 @@ client.on("connect", function () {
   client.subscribe("test", function (err) {
     if (!err) {
       console.log("Subscribed to test");
+    } else {
+      console.log(err);
     }
   });
 });
