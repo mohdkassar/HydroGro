@@ -17,6 +17,7 @@ var pythonFunction = (fileName) => {
 
       success(data);
     });
+    pythonProcess.stderr.setEncoding("utf8");
 
     pythonProcess.stderr.on("data", (data) => {
       console.log("err");
