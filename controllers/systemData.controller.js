@@ -9,7 +9,7 @@ var pythonFunction = (fileName) => {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
       "/home/ubuntu/HydroGrow/Algo.py",
-      fileName + "-" + moment().format("MM-DD-YYYY-HH:MM") + ".jpg",
+      fileName + "-" + moment().format("MM-DD-YYYY-HH:MM") + ".jpeg",
     ]);
     pythonProcess.stdout.setEncoding("utf8");
 
