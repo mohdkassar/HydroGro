@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 lower_green = np.array([60 - 15, 100, 100])
 upper_green = np.array([60 + 15, 255, 255])
 
-img = cv2.imread(sys.argv[1])
+img = cv2.imread("/home/ubuntu/HydroGrow/uploads/" + sys.argv[1])
 
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 

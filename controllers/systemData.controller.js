@@ -4,8 +4,10 @@ const spawn = require("child_process").spawn;
 
 exports.upload = (req, res) => {
   try {
-    const pythonProcess = spawn("python", ["../Algo.py", req]);
-
+    const pythonProcess = spawn("python", ["../Algo.py", "0.jpg"]);
+    pythonProcess.stdout.on("data", (data) => {
+      console.log(data);
+    });
     return res.status(201).json({
       message: "File uploded successfully",
     });
