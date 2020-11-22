@@ -7,10 +7,10 @@ exports.upload = (req, res) => {
     const pythonProcess = spawn("python3", ["../Algo.py", "0.jpg"]);
     pythonProcess.stdout.on("data", (data) => {
       console.log(data);
+      return res.status(201).json({
+        message: "File uploded successfully",
+      });
     });
-    // return res.status(201).json({
-    //   message: "File uploded successfully",
-    // });
   } catch (error) {
     console.error(error);
   }
