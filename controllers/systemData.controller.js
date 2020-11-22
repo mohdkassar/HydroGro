@@ -8,9 +8,9 @@ exports.upload = (req, res) => {
     pythonProcess.stdout.on("data", (data) => {
       console.log(data);
     });
-    return res.status(201).json({
-      message: "File uploded successfully",
-    });
+    // return res.status(201).json({
+    //   message: "File uploded successfully",
+    // });
   } catch (error) {
     console.error(error);
   }
