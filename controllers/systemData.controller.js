@@ -1,6 +1,18 @@
 const SystemData = require("../models/systemData.models");
 const User = require("../models/users.models");
+const spawn = require("child_process").spawn;
 
+exports.upload = (req, res) => {
+  try {
+    const pythonProcess = spawn("python", ["../Algo.py", arg1]);
+
+    return res.status(201).json({
+      message: "File uploded successfully",
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 // Create and Save a new User
 exports.create = (req, res) => {
   // Validate request
@@ -9,14 +21,12 @@ exports.create = (req, res) => {
       message: "Name can not be empty",
     });
   }
-
-  // Create a Note
+  // Create new System Data
   const systemData = new SystemData({
     user_id: req.body.user_id,
     data: req.body.data,
   });
-
-  // Save Note in the database
+  // Save System Data in the database
   systemData
     .save()
     .then((data) => {
