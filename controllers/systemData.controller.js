@@ -11,6 +11,7 @@ let pyProcess = new Promise(function (success, nosuccess) {
   });
 
   pythonProcess.stderr.on("data", (data) => {
+    console.log("err");
     nosuccess(data);
   });
 });
