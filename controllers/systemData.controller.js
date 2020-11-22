@@ -7,6 +7,8 @@ let pyProcess = new Promise(function (success, nosuccess) {
   const pythonProcess = spawn("python3", ["../Algo.py", "0.jpg"]);
 
   pythonProcess.stdout.on("data", function (data) {
+    console.log("dataa");
+
     success(data);
   });
 
