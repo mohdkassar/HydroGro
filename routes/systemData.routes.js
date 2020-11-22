@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+var moment = require("moment"); // require
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -9,7 +10,10 @@ const storage = multer.diskStorage({
     console.log(file);
     cb(
       null,
-      req.params.systemID + "-" + Date.now() + path.extname(file.originalname)
+      req.params.systemID +
+        "-" +
+        moment().format("MM/DD/YYYY-HH:MM") +
+        path.extname(file.originalname)
     );
   },
 });
