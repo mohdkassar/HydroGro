@@ -4,7 +4,7 @@ const spawn = require("child_process").spawn;
 
 exports.upload = (req, res) => {
   try {
-    const pythonProcess = spawn("python", ["../Algo.py", "0.jpg"]);
+    const pythonProcess = spawn("python3", ["../Algo.py", "0.jpg"]);
     pythonProcess.stdout.on("data", (data) => {
       console.log(data);
     });
