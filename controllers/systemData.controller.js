@@ -8,6 +8,7 @@ let pyProcess = new Promise(function (success, nosuccess) {
     "/home/ubuntu/HydroGrow/Algo.py",
     "0.jpg",
   ]);
+  pythonProcess.stdout.setEncoding("utf8");
 
   pythonProcess.stdout.on("data", function (data) {
     console.log("dataa");
