@@ -33,8 +33,8 @@ for x in range(step_x):
         green = cv2.countNonZero(mask)
         print('The number of green pixels is: ' + str(green))
 
-	print(str(green))
-	sys.stdout.flush()
+	      print(str(green))
+	      sys.stdout.flush()
         
   #      cv2.imshow("x = \{0\}, y = \{1\}".format(x,y),part)
   #      cv2.imshow("eq_img",eq_img)
