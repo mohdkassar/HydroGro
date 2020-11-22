@@ -2,34 +2,36 @@ const SystemData = require("../models/systemData.models");
 const User = require("../models/users.models");
 const spawn = require("child_process").spawn;
 
-let pyProcess = new Promise(function (success, nosuccess) {
-  const { spawn } = require("child_process");
-  const pythonProcess = spawn("python3", [
-    "/home/ubuntu/HydroGrow/Algo.py",
-    "0.jpg",
-  ]);
-  pythonProcess.stdout.setEncoding("utf8");
+var pythonFunction = (fileName) => {
+  return new Promise(function (success, nosuccess) {
+    const { spawn } = require("child_process");
+    const pythonProcess = spawn("python3", [
+      "/home/ubuntu/HydroGrow/Algo.py",
+      fileName + Date.now(),
+    ]);
+    pythonProcess.stdout.setEncoding("utf8");
 
-  pythonProcess.stdout.on("data", function (data) {
-    console.log("dataa");
+    pythonProcess.stdout.on("data", function (data) {
+      console.log("dataa");
 
-    success(data);
+      success(data);
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      console.log("err");
+      nosuccess(data);
+    });
+
+    console.log("PROCESS PID: " + pythonProcess.pid);
   });
-
-  pythonProcess.stderr.on("data", (data) => {
-    console.log("err");
-    nosuccess(data);
-  });
-
-  console.log("PROCESS PID: " + pythonProcess.pid);
-});
+};
 
 exports.upload = (req, res) => {
   try {
     // const pythonProcess = spawn("python3", ["../Algo.py", "0.jpg"]);
     // console.log("spawned: " + pythonProcess.pid);
 
-    pyProcess.then((response) => {
+    pythonFunction(req.params.systemID).then((response) => {
       console.log(response);
       return res.status(201).json({
         message: "File uploded successfully",
