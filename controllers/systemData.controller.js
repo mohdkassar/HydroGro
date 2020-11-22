@@ -4,7 +4,7 @@ const spawn = require("child_process").spawn;
 
 exports.upload = (req, res) => {
   try {
-    const pythonProcess = spawn("python", ["../Algo.py", arg1]);
+    const pythonProcess = spawn("python", ["../Algo.py", req]);
 
     return res.status(201).json({
       message: "File uploded successfully",
@@ -13,7 +13,7 @@ exports.upload = (req, res) => {
     console.error(error);
   }
 };
-// Create and Save a new User
+// Create and Save a new System Data
 exports.create = (req, res) => {
   // Validate request
   if (!req.body.user_id) {
