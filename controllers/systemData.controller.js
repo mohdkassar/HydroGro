@@ -3,6 +3,7 @@ const User = require("../models/users.models");
 const spawn = require("child_process").spawn;
 
 var pythonFunction = (fileName) => {
+  console.log("File Name: " + fileName);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
