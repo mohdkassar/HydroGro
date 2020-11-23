@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    console.log(file);
+    //console.log(file);
     cb(
       null,
       req.params.systemID +
@@ -41,7 +41,7 @@ var pythonFunction = (fileName, extention) => {
     pythonProcess.stdout.setEncoding("utf8");
 
     pythonProcess.stdout.on("data", function (data) {
-      console.log("dataa");
+      console.log("data");
 
       success(data);
     });
@@ -67,8 +67,8 @@ exports.upload = (req, res) => {
     upload(req, res, function (err) {
       // req.file contains information of uploaded file
       // req.body contains information of text fields, if there were any
-      console.log("REQ.FILE: ");
-      console.log(req.file);
+      //console.log("REQ.FILE: ");
+      //console.log(req.file);
 
       if (req.fileValidationError) {
         return res.send(req.fileValidationError);

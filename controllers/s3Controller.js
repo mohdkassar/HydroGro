@@ -4,6 +4,8 @@ const S3 = require("../awsS3Config");
 const BUCKET_NAME = "shabeb";
 
 const uploadFile = (file, name, callback) => {
+  console.log("FILE TO BE UPLOADED ON S3: ");
+  console.log(file);
   if (file != null) {
     var params = {
       Bucket: BUCKET_NAME,
