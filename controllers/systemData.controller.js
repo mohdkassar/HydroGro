@@ -90,7 +90,14 @@ exports.upload = (req, res) => {
           user_id: req.params.systemID,
           dataType: "Image Upload",
           data: {
-            pixelCount: pixelCount,
+            pixelCount: {
+              tray11: pixelCount[0],
+              tray12: pixelCount[2],
+              tray13: pixelCount[4],
+              tray21: pixelCount[1],
+              tray22: pixelCount[3],
+              tray23: pixelCount[5],
+            },
             filePath: fileName,
           },
         });
