@@ -31,31 +31,13 @@ var pythonFunction = (fileName) => {
 
 exports.upload = (req, res) => {
   try {
-    // const pythonProcess = spawn("python3", ["../Algo.py", "0.jpg"]);
-    // console.log("spawned: " + pythonProcess.pid);
-
+    console.log(req.files.image);
     pythonFunction(req.params.systemID).then((response) => {
       console.log(response);
       return res.status(201).json({
         message: "File uploded successfully",
       });
     });
-    // pythonProcess.on("data", (data) => {
-    //   console.log(data);
-    //   return res.status(201).json({
-    //     message: "File uploded successfully",
-    //   });
-    // });
-
-    // pythonProcess.on("error", function () {
-    //   console.log("Failed to start child.");
-    // });
-    // pythonProcess.on("close", function (code) {
-    //   console.log("Child process exited with code " + code);
-    // });
-    // pythonProcess.stdout.on("end", function () {
-    //   console.log("Finished collecting data chunks.");
-    // });
   } catch (error) {
     console.error(error);
   }
