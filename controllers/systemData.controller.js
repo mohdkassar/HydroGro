@@ -46,7 +46,10 @@ exports.upload = (req, res) => {
       }
       const systemData = new SystemData({
         user_id: req.params.systemID,
-        data: pixelCount,
+        data: {
+          pixelCount: pixelCount,
+          filePath: fileName,
+        },
       });
       // Save System Data in the database
       systemData
@@ -60,9 +63,6 @@ exports.upload = (req, res) => {
               err.message || "Some error occurred while creating the user.",
           });
         });
-      return res.status(201).json({
-        message: "File uploded successfully",
-      });
     });
   } catch (error) {
     console.error(error);
