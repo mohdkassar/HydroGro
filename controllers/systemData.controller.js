@@ -30,7 +30,6 @@ const fileFilter = (req, file, cb) => {
 };
 
 var pythonFunction = (fileName, extention) => {
-  console.log("File Name: " + fileName);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
@@ -60,11 +59,12 @@ exports.upload = (req, res) => {
     const upload = multer({ storage: storage, fileFilter: fileFilter }).single(
       "image"
     );
-    console.log(req.file);
 
     upload(req, res, function (err) {
       // req.file contains information of uploaded file
       // req.body contains information of text fields, if there were any
+      console.log("REQ.FILE: ");
+      console.log(req.file);
 
       if (req.fileValidationError) {
         return res.send(req.fileValidationError);
@@ -77,10 +77,10 @@ exports.upload = (req, res) => {
       }
 
       // Display uploaded image for user validation
-      var extention = path.extname(req.files.image.name);
+      var extention = path.extname(req.file.originalname);
       var fileName =
         req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
-      console.log(fileName);
+      console.log("FILE NAME: " + fileName);
 
       pythonFunction(req.params.systemID, extention).then((response) => {
         var pixelCount = response.split(" ");
