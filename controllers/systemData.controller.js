@@ -3,6 +3,32 @@ const User = require("../models/users.models");
 const spawn = require("child_process").spawn;
 var moment = require("moment"); // require
 const path = require("path");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    cb(
+      null,
+      req.params.systemID +
+        "-" +
+        moment().format("MM-DD-YYYY") +
+        path.extname(file.originalname)
+    );
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 var pythonFunction = (fileName, extention) => {
   console.log("File Name: " + fileName);
@@ -32,37 +58,53 @@ var pythonFunction = (fileName, extention) => {
 
 exports.upload = (req, res) => {
   try {
-    var extention = path.extname(req.files.image.name);
-    var fileName =
-      req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
-    console.log(fileName);
+    upload(req, res, function (err) {
+      // req.file contains information of uploaded file
+      // req.body contains information of text fields, if there were any
 
-    pythonFunction(req.params.systemID, extention).then((response) => {
-      var pixelCount = response.split(" ");
-      for (var i = 0; i < pixelCount.length; i++) {
-        console.log(pixelCount[i]);
-        console.log("-----");
+      if (req.fileValidationError) {
+        return res.send(req.fileValidationError);
+      } else if (!req.file) {
+        return res.send("Please select an image to upload");
+      } else if (err instanceof multer.MulterError) {
+        return res.send(err);
+      } else if (err) {
+        return res.send(err);
       }
-      const systemData = new SystemData({
-        user_id: req.params.systemID,
-        dataType: "Image Upload",
-        data: {
-          pixelCount: pixelCount,
-          filePath: fileName,
-        },
-      });
-      // Save System Data in the database
-      systemData
-        .save()
-        .then((data) => {
-          res.send(data);
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the user.",
-          });
+
+      // Display uploaded image for user validation
+      var extention = path.extname(req.files.image.name);
+      var fileName =
+        req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
+      console.log(fileName);
+
+      pythonFunction(req.params.systemID, extention).then((response) => {
+        var pixelCount = response.split(" ");
+        for (var i = 0; i < pixelCount.length; i++) {
+          console.log(pixelCount[i]);
+          console.log("-----");
+        }
+        const systemData = new SystemData({
+          user_id: req.params.systemID,
+          dataType: "Image Upload",
+          data: {
+            pixelCount: pixelCount,
+            filePath: fileName,
+          },
         });
+        // Save System Data in the database
+        systemData
+          .save()
+          .then((data) => {
+            res.send(data);
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the user.",
+            });
+          });
+      });
     });
   } catch (error) {
     console.error(error);
