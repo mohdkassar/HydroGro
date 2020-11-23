@@ -31,7 +31,7 @@ var pythonFunction = (fileName) => {
 
 exports.upload = (req, res) => {
   try {
-    console.log(req.files.image);
+    console.log(req.files);
     pythonFunction(req.params.systemID).then((response) => {
       console.log(response);
       return res.status(201).json({
