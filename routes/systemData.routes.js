@@ -7,5 +7,5 @@ module.exports = (app) => {
   // Retrieve latest System Values
   app.get("/system_data/:userID", systems.getLatestSystemValues);
 
-  app.post("/upload/:systemID", upload.single("image"), systems.upload);
+  app.post("/upload/:systemID", systems.upload);
 };
