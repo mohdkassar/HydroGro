@@ -83,11 +83,9 @@ exports.upload = (req, res) => {
       console.log("FILE NAME: " + fileName);
 
       pythonFunction(req.params.systemID, extention).then((response) => {
+        var response = response.replace(/(\r\n|\n|\r)/gm, "");
         var pixelCount = response.split(" ");
-        for (var i = 0; i < pixelCount.length; i++) {
-          console.log(pixelCount[i]);
-          console.log("-----");
-        }
+
         const systemData = new SystemData({
           user_id: req.params.systemID,
           dataType: "Image Upload",
