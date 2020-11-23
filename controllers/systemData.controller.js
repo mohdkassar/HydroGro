@@ -28,7 +28,6 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 var pythonFunction = (fileName, extention) => {
   console.log("File Name: " + fileName);
@@ -58,6 +57,8 @@ var pythonFunction = (fileName, extention) => {
 
 exports.upload = (req, res) => {
   try {
+    const upload = multer({ storage: storage, fileFilter: fileFilter });
+
     upload(req, res, function (err) {
       // req.file contains information of uploaded file
       // req.body contains information of text fields, if there were any
