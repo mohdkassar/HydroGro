@@ -4,6 +4,7 @@ const spawn = require("child_process").spawn;
 var moment = require("moment"); // require
 const path = require("path");
 const multer = require("multer");
+const s3Controller = require("./s3Controller");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -86,33 +87,36 @@ exports.upload = (req, res) => {
         var response = response.replace(/(\r\n|\n|\r)/gm, "");
         var pixelCount = response.split(" ");
 
-        const systemData = new SystemData({
-          user_id: req.params.systemID,
-          dataType: "Image Upload",
-          data: {
-            pixelCount: {
-              tray11: pixelCount[0],
-              tray12: pixelCount[2],
-              tray13: pixelCount[4],
-              tray21: pixelCount[1],
-              tray22: pixelCount[3],
-              tray23: pixelCount[5],
+        //UPLOAD TO S3
+        s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
+          const systemData = new SystemData({
+            user_id: req.params.systemID,
+            dataType: "Image Upload",
+            data: {
+              pixelCount: {
+                tray11: pixelCount[0],
+                tray12: pixelCount[2],
+                tray13: pixelCount[4],
+                tray21: pixelCount[1],
+                tray22: pixelCount[3],
+                tray23: pixelCount[5],
+              },
+              filePath: s3Uploaded.Location,
             },
-            filePath: fileName,
-          },
-        });
-        // Save System Data in the database
-        systemData
-          .save()
-          .then((data) => {
-            res.send(data);
-          })
-          .catch((err) => {
-            res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the user.",
-            });
           });
+          // Save System Data in the database
+          systemData
+            .save()
+            .then((data) => {
+              res.send(data);
+            })
+            .catch((err) => {
+              res.status(500).send({
+                message:
+                  err.message || "Some error occurred while creating the user.",
+              });
+            });
+        });
       });
     });
   } catch (error) {
