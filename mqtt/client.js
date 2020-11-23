@@ -31,6 +31,7 @@ client.on("message", function (topic, message) {
       };
       const systemData = new SystemData({
         user_id: mqttMessage.SystemID,
+        dataType: "Sensor Reading",
         data: mqttMessage.Data,
       });
 

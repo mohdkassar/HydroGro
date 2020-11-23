@@ -46,6 +46,7 @@ exports.upload = (req, res) => {
       }
       const systemData = new SystemData({
         user_id: req.params.systemID,
+        dataType: "Image Upload",
         data: {
           pixelCount: pixelCount,
           filePath: fileName,
@@ -100,7 +101,7 @@ exports.getLatestSystemValues = (req, res) => {
     .then((user) => {
       if (!user) {
       }
-      SystemData.find({ user_id: user.systemID })
+      SystemData.find({ user_id: user.systemID, dataType: "Sensor Reading" })
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
