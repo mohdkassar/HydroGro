@@ -60,6 +60,7 @@ exports.upload = (req, res) => {
     const upload = multer({ storage: storage, fileFilter: fileFilter }).single(
       "image"
     );
+    console.log(req.file);
 
     upload(req, res, function (err) {
       // req.file contains information of uploaded file
