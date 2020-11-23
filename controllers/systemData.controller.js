@@ -57,7 +57,9 @@ var pythonFunction = (fileName, extention) => {
 
 exports.upload = (req, res) => {
   try {
-    const upload = multer({ storage: storage, fileFilter: fileFilter });
+    const upload = multer({ storage: storage, fileFilter: fileFilter }).single(
+      "image"
+    );
 
     upload(req, res, function (err) {
       // req.file contains information of uploaded file
