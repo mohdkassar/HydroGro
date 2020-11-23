@@ -38,8 +38,6 @@ exports.upload = (req, res) => {
       "-" +
       moment().format("MM-DD-YYYY-HH:MM") +
       extention;
-    console.log(fileName);
-
     pythonFunction(req.params.systemID, extention).then((response) => {
       var pixelCount = response.split(" ");
       for (var i = 0; i < pixelCount.length; i++) {
@@ -48,11 +46,7 @@ exports.upload = (req, res) => {
       }
       const systemData = new SystemData({
         user_id: req.params.systemID,
-        dataType: "Image Upload",
-        data: {
-          pixelCount: pixelCount,
-          filePath: fileName,
-        },
+        data: pixelCount,
       });
       // Save System Data in the database
       systemData
@@ -66,6 +60,9 @@ exports.upload = (req, res) => {
               err.message || "Some error occurred while creating the user.",
           });
         });
+      return res.status(201).json({
+        message: "File uploded successfully",
+      });
     });
   } catch (error) {
     console.error(error);
@@ -103,7 +100,7 @@ exports.getLatestSystemValues = (req, res) => {
     .then((user) => {
       if (!user) {
       }
-      SystemData.find({ user_id: user.systemID, dataType: "Sensor Reading" })
+      SystemData.find({ user_id: user.systemID })
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
