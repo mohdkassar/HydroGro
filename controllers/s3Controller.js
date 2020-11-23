@@ -8,7 +8,7 @@ const uploadFile = (file, name, callback) => {
     var params = {
       Bucket: BUCKET_NAME,
       Key: name,
-      Body: file.data,
+      Body: file.buffer,
       ContentType: file.mimetype,
       ACL: "public-read",
     };
