@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 module.exports = (app) => {
   const systems = require("../controllers/systemData.controller.js");
