@@ -37,33 +37,33 @@ exports.upload = (req, res) => {
       req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
     console.log(fileName);
 
-    // pythonFunction(req.params.systemID, extention).then((response) => {
-    //   var pixelCount = response.split(" ");
-    //   for (var i = 0; i < pixelCount.length; i++) {
-    //     console.log(pixelCount[i]);
-    //     console.log("-----");
-    //   }
-    //   const systemData = new SystemData({
-    //     user_id: req.params.systemID,
-    //     dataType: "Image Upload",
-    //     data: {
-    //       pixelCount: pixelCount,
-    //       filePath: fileName,
-    //     },
-    //   });
-    //   // Save System Data in the database
-    //   systemData
-    //     .save()
-    //     .then((data) => {
-    //       res.send(data);
-    //     })
-    //     .catch((err) => {
-    //       res.status(500).send({
-    //         message:
-    //           err.message || "Some error occurred while creating the user.",
-    //       });
-    //     });
-    // });
+    pythonFunction(req.params.systemID, extention).then((response) => {
+      var pixelCount = response.split(" ");
+      for (var i = 0; i < pixelCount.length; i++) {
+        console.log(pixelCount[i]);
+        console.log("-----");
+      }
+      const systemData = new SystemData({
+        user_id: req.params.systemID,
+        dataType: "Image Upload",
+        data: {
+          pixelCount: pixelCount,
+          filePath: fileName,
+        },
+      });
+      // Save System Data in the database
+      systemData
+        .save()
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the user.",
+          });
+        });
+    });
   } catch (error) {
     console.error(error);
   }
