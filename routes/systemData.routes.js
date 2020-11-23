@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
       null,
       req.params.systemID +
         "-" +
-        moment().format("MM-DD-YYYY-HH:MM") +
+        moment().format("MM-DD-YYYY") +
         path.extname(file.originalname)
     );
   },

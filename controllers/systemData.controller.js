@@ -10,7 +10,7 @@ var pythonFunction = (fileName, extention) => {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
       "/home/ubuntu/HydroGrow/Algo.py",
-      fileName + "-" + moment().format("MM-DD-YYYY-HH:MM") + extention,
+      fileName + "-" + moment().format("MM-DD-YYYY") + extention,
     ]);
     pythonProcess.stdout.setEncoding("utf8");
 
@@ -34,10 +34,9 @@ exports.upload = (req, res) => {
   try {
     var extention = path.extname(req.files.image.name);
     var fileName =
-      req.params.systemID +
-      "-" +
-      moment().format("MM-DD-YYYY-HH:MM") +
-      extention;
+      req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
+    console.log(fileName);
+
     pythonFunction(req.params.systemID, extention).then((response) => {
       var pixelCount = response.split(" ");
       for (var i = 0; i < pixelCount.length; i++) {
@@ -46,7 +45,11 @@ exports.upload = (req, res) => {
       }
       const systemData = new SystemData({
         user_id: req.params.systemID,
-        data: pixelCount,
+        dataType: "Image Upload",
+        data: {
+          pixelCount: pixelCount,
+          filePath: fileName,
+        },
       });
       // Save System Data in the database
       systemData
@@ -60,9 +63,6 @@ exports.upload = (req, res) => {
               err.message || "Some error occurred while creating the user.",
           });
         });
-      return res.status(201).json({
-        message: "File uploded successfully",
-      });
     });
   } catch (error) {
     console.error(error);
@@ -100,7 +100,7 @@ exports.getLatestSystemValues = (req, res) => {
     .then((user) => {
       if (!user) {
       }
-      SystemData.find({ user_id: user.systemID })
+      SystemData.find({ user_id: user.systemID, dataType: "Sensor Reading" })
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
