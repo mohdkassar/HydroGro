@@ -4,13 +4,13 @@ const spawn = require("child_process").spawn;
 var moment = require("moment"); // require
 const path = require("path");
 
-var pythonFunction = (fileName) => {
+var pythonFunction = (fileName, extention) => {
   console.log("File Name: " + fileName);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
       "/home/ubuntu/HydroGrow/Algo.py",
-      fileName + "-" + moment().format("MM-DD-YYYY-HH:MM") + ".jpeg",
+      fileName + "-" + moment().format("MM-DD-YYYY-HH:MM") + extention,
     ]);
     pythonProcess.stdout.setEncoding("utf8");
 
@@ -32,9 +32,34 @@ var pythonFunction = (fileName) => {
 
 exports.upload = (req, res) => {
   try {
-    console.log("MIMETYPE: " + path.extname(req.files.image.name));
-    pythonFunction(req.params.systemID).then((response) => {
-      console.log(response);
+    var extention = path.extname(req.files.image.name);
+    var fileName =
+      req.params.systemID +
+      "-" +
+      moment().format("MM-DD-YYYY-HH:MM") +
+      extention;
+    pythonFunction(req.params.systemID, extention).then((response) => {
+      var pixelCount = response.split(" ");
+      for (var i = 0; i < pixelCount.length; i++) {
+        console.log(pixelCount[i]);
+        console.log("-----");
+      }
+      const systemData = new SystemData({
+        user_id: req.params.systemID,
+        data: pixelCount,
+      });
+      // Save System Data in the database
+      systemData
+        .save()
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the user.",
+          });
+        });
       return res.status(201).json({
         message: "File uploded successfully",
       });
