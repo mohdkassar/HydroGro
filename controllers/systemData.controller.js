@@ -32,7 +32,7 @@ var pythonFunction = (fileName) => {
 
 exports.upload = (req, res) => {
   try {
-    console.log("MIMETYPE: " + path.extname(req.files.image.originalname));
+    console.log("MIMETYPE: " + path.extname(req.files.image.name));
     pythonFunction(req.params.systemID).then((response) => {
       console.log(response);
       return res.status(201).json({
