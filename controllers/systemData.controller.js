@@ -2,6 +2,7 @@ const SystemData = require("../models/systemData.models");
 const User = require("../models/users.models");
 const spawn = require("child_process").spawn;
 var moment = require("moment"); // require
+const path = require("path");
 
 var pythonFunction = (fileName) => {
   console.log("File Name: " + fileName);
@@ -31,7 +32,7 @@ var pythonFunction = (fileName) => {
 
 exports.upload = (req, res) => {
   try {
-    console.log(req.files.image);
+    console.log("MIMETYPE: " + path.extname(req.files.image.originalname));
     pythonFunction(req.params.systemID).then((response) => {
       console.log(response);
       return res.status(201).json({
