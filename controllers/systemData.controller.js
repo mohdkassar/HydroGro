@@ -90,7 +90,7 @@ exports.upload = (req, res) => {
         var response = response.replace(/(\r\n|\n|\r)/gm, "");
         var pixelCount = response.split(" ");
 
-        s3Upload.single("image")(req, res, function (err) {
+        s3Upload.single("image2")(req, res, function (err) {
           //UPLOAD TO S3
           s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
             const systemData = new SystemData({
