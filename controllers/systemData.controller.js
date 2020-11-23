@@ -38,6 +38,8 @@ exports.upload = (req, res) => {
       "-" +
       moment().format("MM-DD-YYYY-HH:MM") +
       extention;
+    console.log(fileName);
+
     pythonFunction(req.params.systemID, extention).then((response) => {
       var pixelCount = response.split(" ");
       for (var i = 0; i < pixelCount.length; i++) {
