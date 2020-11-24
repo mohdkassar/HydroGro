@@ -32,6 +32,7 @@ const fileFilter = (req, file, cb) => {
 
 //IMAGE PROCESSING PYTHON ALGORITHM
 var pythonFunction = (imageURL) => {
+  console.log("IMAGE URL: " + imageURL);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [imageURL]);
@@ -60,7 +61,6 @@ exports.upload = (req, res) => {
     var s3Upload = multer({ storage: s3Storage });
 
     s3Upload.single("image")(req, res, function (err) {
-      console.log(req.file);
       var extention = path.extname(req.file.originalname);
       var fileName =
         req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
