@@ -7,7 +7,11 @@ import numpy as np
 lower_green = np.array([60 - 15, 100, 100])
 upper_green = np.array([60 + 15, 255, 255])
 
-img = cv2.imread("/home/ubuntu/HydroGrow/uploads/" + sys.argv[1])
+#img = cv2.imread("/home/ubuntu/HydroGrow/uploads/" + sys.argv[1])
+
+req = urllib.request.urlopen(sys.argv[1])
+arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+img = cv2.imdecode(arr, -1)
 
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -34,18 +38,7 @@ for x in range(step_x):
         result = cv2.bitwise_and(part, part, mask=mask)
 
         green = cv2.countNonZero(mask)
-#        print('The number of green pixels is: ' + str(green))
         a.append(green)
-#	      print(str(green))
-#	      sys.stdout.flush()
-
-  #      cv2.imshow("x = \{0\}, y = \{1\}".format(x,y),part)
-  #      cv2.imshow("eq_img",eq_img)
-  #      cv2.waitKey(0)
-    #    plt.subplot(1, 6, 1)
-   #     plt.imshow(mask, cmap="gray")
-  #      plt.subplot(1, 6, 2)
- #       plt.imshow(part)
-#        plt.show()}
 print(*a)
 sys.stdout.flush()
+

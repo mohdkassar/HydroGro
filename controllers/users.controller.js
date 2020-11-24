@@ -104,36 +104,53 @@ exports.setup = (req, res) => {
                   message: "Plant not found with name " + req.body.tray2,
                 });
               }
-              var mqttMessage = {
-                message: "SystemSetup",
-                SystemID: user.systemID,
-                Data: [
-                  {
-                    Tray1: {
-                      EC1_min: profile1.EC1_min,
-                      EC1_max: profile1.EC1_max,
-                      EC2_min: profile1.EC2_min,
-                      EC2_max: profile1.EC2_max,
-                      EC3_min: profile1.EC3_min,
-                      EC3_max: profile1.EC3_max,
-                      pH_min: profile1.pH_min,
-                      pH_max: profile1.pH_max,
-                    },
-                  },
-                  {
-                    Tray2: {
-                      EC1_min: profile2.EC1_min,
-                      EC1_max: profile2.EC1_max,
-                      EC2_min: profile2.EC2_min,
-                      EC2_max: profile2.EC2_max,
-                      EC3_min: profile2.EC3_min,
-                      EC3_max: profile2.EC3_max,
-                      pH_min: profile2.pH_min,
-                      pH_max: profile2.pH_max,
-                    },
-                  },
-                ],
-              };
+              // var mqttMessage = {
+              //   message: "SystemSetup",
+              //   Data: [
+              //     {
+              //       Tray1: {
+              //         EC1_min: profile1.EC1_min,
+              //         EC1_max: profile1.EC1_max,
+              //         // EC2_min: profile1.EC2_min,
+              //         // EC2_max: profile1.EC2_max,
+              //         // EC3_min: profile1.EC3_min,
+              //         // EC3_max: profile1.EC3_max,
+              //         pH_min: profile1.pH_min,
+              //         pH_max: profile1.pH_max,
+              //       },
+              //     },
+              //     {
+              //       Tray2: {
+              //         EC1_min: profile2.EC1_min,
+              //         EC1_max: profile2.EC1_max,
+              //         // EC2_min: profile2.EC2_min,
+              //         // EC2_max: profile2.EC2_max,
+              //         // EC3_min: profile2.EC3_min,
+              //         // EC3_max: profile2.EC3_max,
+              //         pH_min: profile2.pH_min,
+              //         pH_max: profile2.pH_max,
+              //       },
+              //     },
+              //   ],
+              // };
+              var mqttMessage =
+                "1/" +
+                profile1.EC1_min +
+                "/" +
+                profile1.EC1_max +
+                "/" +
+                profile2.EC2_min +
+                "/" +
+                profile2.EC2_max +
+                "/" +
+                profile1.pH_min +
+                "/" +
+                profile1.pH_max +
+                "/" +
+                profile2.pH_min +
+                "/" +
+                profile2.pH_max;
+
               mqttClinet.publish(
                 user.systemID,
                 JSON.stringify(mqttMessage) //convert number to string
