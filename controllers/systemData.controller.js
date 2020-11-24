@@ -58,7 +58,8 @@ exports.upload = (req, res) => {
   try {
     var s3Storage = multer.memoryStorage();
     var s3Upload = multer({ storage: s3Storage });
-    var extention = path.extname(req.file.originalname);
+    console.log(req.file);
+    var extention = path.extname(req.file.name);
     var fileName =
       req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
     console.log("FILE NAME: " + fileName);
