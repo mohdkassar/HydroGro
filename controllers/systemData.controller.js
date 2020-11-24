@@ -67,7 +67,7 @@ exports.upload = (req, res) => {
       console.log("FILE NAME: " + fileName);
       //UPLOAD TO S3
       s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
-        pythonFunction(s3Uploaded.Location).then((response) => {
+        pythonFunction("'" + s3Uploaded.Location + "'").then((response) => {
           var response = response.replace(/(\r\n|\n|\r)/gm, "");
           var pixelCount = response.split(" ");
 
