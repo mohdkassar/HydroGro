@@ -35,7 +35,7 @@ var pythonFunction = (imageURL) => {
   console.log("IMAGE URL: " + imageURL);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
-    const pythonProcess = spawn("python3", [imageURL]);
+    const pythonProcess = spawn("python3", "Algo.py", [imageURL]);
     pythonProcess.stdout.setEncoding("utf8");
 
     pythonProcess.stdout.on("data", function (data) {
