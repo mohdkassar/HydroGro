@@ -31,13 +31,10 @@ const fileFilter = (req, file, cb) => {
 };
 
 //IMAGE PROCESSING PYTHON ALGORITHM
-var pythonFunction = (fileName, extention) => {
+var pythonFunction = (imageURL) => {
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
-    const pythonProcess = spawn("python3", [
-      "/home/ubuntu/HydroGrow/Algo.py",
-      fileName + "-" + moment().format("MM-DD-YYYY") + extention,
-    ]);
+    const pythonProcess = spawn("python3", [imageURL]);
     pythonProcess.stdout.setEncoding("utf8");
 
     pythonProcess.stdout.on("data", function (data) {
@@ -59,69 +56,47 @@ var pythonFunction = (fileName, extention) => {
 //UPLOAD IMAGE FUNCTION
 exports.upload = (req, res) => {
   try {
-    const upload = multer({ storage: storage, fileFilter: fileFilter }).single(
-      "image"
-    );
     var s3Storage = multer.memoryStorage();
     var s3Upload = multer({ storage: s3Storage });
-    upload(req, res, function (err) {
-      // req.file contains information of uploaded file
-      // req.body contains information of text fields, if there were any
-      //console.log("REQ.FILE: ");
-      //console.log(req.file);
+    var extention = path.extname(req.file.originalname);
+    var fileName =
+      req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
+    console.log("FILE NAME: " + fileName);
 
-      if (req.fileValidationError) {
-        return res.send(req.fileValidationError);
-      } else if (!req.file) {
-        return res.send("Please select an image to upload");
-      } else if (err instanceof multer.MulterError) {
-        return res.send(err);
-      } else if (err) {
-        return res.send(err);
-      }
+    s3Upload.single("image")(req, res, function (err) {
+      //UPLOAD TO S3
+      s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
+        pythonFunction(s3Uploaded.Location).then((response) => {
+          var response = response.replace(/(\r\n|\n|\r)/gm, "");
+          var pixelCount = response.split(" ");
 
-      // Display uploaded image for user validation
-      var extention = path.extname(req.file.originalname);
-      var fileName =
-        req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
-      console.log("FILE NAME: " + fileName);
-
-      pythonFunction(req.params.systemID, extention).then((response) => {
-        var response = response.replace(/(\r\n|\n|\r)/gm, "");
-        var pixelCount = response.split(" ");
-
-        s3Upload.single("image")(req, res, function (err) {
-          //UPLOAD TO S3
-          s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
-            const systemData = new SystemData({
-              user_id: req.params.systemID,
-              dataType: "Image Upload",
-              data: {
-                pixelCount: {
-                  tray11: pixelCount[0],
-                  tray12: pixelCount[2],
-                  tray13: pixelCount[4],
-                  tray21: pixelCount[1],
-                  tray22: pixelCount[3],
-                  tray23: pixelCount[5],
-                },
-                filePath: s3Uploaded.Location,
+          const systemData = new SystemData({
+            user_id: req.params.systemID,
+            dataType: "Image Upload",
+            data: {
+              pixelCount: {
+                tray11: pixelCount[0],
+                tray12: pixelCount[2],
+                tray13: pixelCount[4],
+                tray21: pixelCount[1],
+                tray22: pixelCount[3],
+                tray23: pixelCount[5],
               },
-            });
-            // Save System Data in the database
-            systemData
-              .save()
-              .then((data) => {
-                res.send(data);
-              })
-              .catch((err) => {
-                res.status(500).send({
-                  message:
-                    err.message ||
-                    "Some error occurred while creating the user.",
-                });
-              });
+              filePath: s3Uploaded.Location,
+            },
           });
+          // Save System Data in the database
+          systemData
+            .save()
+            .then((data) => {
+              res.send(data);
+            })
+            .catch((err) => {
+              res.status(500).send({
+                message:
+                  err.message || "Some error occurred while creating the user.",
+              });
+            });
         });
       });
     });
