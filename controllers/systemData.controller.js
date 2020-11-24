@@ -61,7 +61,7 @@ exports.upload = (req, res) => {
 
     s3Upload.single("image")(req, res, function (err) {
       console.log(req.file);
-      var extention = path.extname(req.file.name);
+      var extention = path.extname(req.file.originalname);
       var fileName =
         req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
       console.log("FILE NAME: " + fileName);
