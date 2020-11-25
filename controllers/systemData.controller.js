@@ -64,9 +64,8 @@ exports.upload = (req, res) => {
     var s3Upload = multer({ storage: s3Storage });
 
     s3Upload.single("image")(req, res, function (err) {
-      var extention = path.extname(req.file.originalname);
-      var fileName =
-        req.params.systemID + "-" + moment().format("MM-DD-YYYY") + extention;
+      //var extention = path.extname(req.file.originalname);
+      var fileName = req.params.systemID + "-" + moment().format("MM-DD-YYYY");
       console.log("FILE NAME: " + fileName);
       //UPLOAD TO S3
       s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
