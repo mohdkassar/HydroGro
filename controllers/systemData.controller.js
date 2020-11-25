@@ -139,7 +139,7 @@ exports.getLatestSystemValues = (req, res) => {
     .then((user) => {
       if (!user) {
       }
-      SystemData.find({ user_id: user.systemID, dataType: "Sensor Reading" })
+      SystemData.find({ user_id: user.systemID })
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
