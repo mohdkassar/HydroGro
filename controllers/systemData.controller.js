@@ -143,9 +143,15 @@ exports.getLatestSystemValues = (req, res) => {
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
-          docs[0].data[0].PlantName = user.tray1;
-          docs[0].data[1].PlantName = user.tray2;
-          res.send(docs);
+          SystemData.find({ user_id: user.systemID, dataType: "Image Upload" })
+            .sort({ created_at: -1 })
+            .limit(1)
+            .exec(function (err, imageDocs) {
+              docs[0].data[0].PlantName = user.tray1;
+              docs[0].data[1].PlantName = user.tray2;
+              docs[0].imageURL = imageDocs[0].data.filePath;
+              res.send(docs);
+            });
         });
     })
     .catch((err) => {
