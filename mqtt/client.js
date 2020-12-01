@@ -21,18 +21,19 @@ client.on("connect", function () {
 client.on("message", function (topic, message) {
   // message is Buffer
   console.log(topic);
-  if (message.toString().localeCompare("test")) {
+  if (message.length > 0) {
     var mqttMessage = JSON.parse(message.toString());
-    if (mqttMessage.message == "data") {
-      var req = {
-        body: {
-          user_id: mqttMessage.SystemID,
-        },
-      };
+    console.log(mqttMessage.message.localeCompare("SR"));
+    if (mqttMessage.message.localeCompare("SR") == 0) {
+      console.log("------");
       const systemData = new SystemData({
-        user_id: mqttMessage.SystemID,
+        user_id: 1664,
         dataType: "Sensor Reading",
-        data: mqttMessage.Data,
+        data: {
+          TR1: mqttMessage.TR1,
+          TR2: mqttMessage.TR2,
+          GR: mqttMessage.TR2,
+        },
       });
 
       // Save Note in the database
