@@ -149,7 +149,7 @@ exports.getLatestSystemValues = (req, res) => {
             .exec(function (err, imageDocs) {
               docs[0].data[0]["PlantName"] = user.tray1;
               docs[0].data[1]["PlantName"] = user.tray2;
-              if (imageDocs[0].data != null) {
+              if (imageDocs != null) {
                 docs[0].data[0]["filePath"] = imageDocs[0].data.filePath;
                 docs[0].data[1]["filePath"] = imageDocs[0].data.filePath;
                 console.log(imageDocs[0].data.filePath);
