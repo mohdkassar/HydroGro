@@ -9,7 +9,7 @@ var client = mqtt.connect("http://34.201.69.234:1883", {
 });
 
 client.on("connect", function () {
-  client.subscribe("message", function (err) {
+  client.subscribe("test", function (err) {
     if (!err) {
       console.log("Subscribed to test");
     } else {
@@ -22,7 +22,7 @@ client.on("message", function (topic, message) {
   // message is Buffer
   console.log(topic);
   if (message.length > 0) {
-    console.log(message.toString);
+    console.log(message.toString());
     try {
       var mqttMessage = JSON.parse(message.toString());
       console.log(mqttMessage.message.localeCompare("SR"));

@@ -143,22 +143,42 @@ exports.getLatestSystemValues = (req, res) => {
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
-          console.log("DOCS");
-          console.log(docs);
+          //console.log("DOCS");
+          //console.log(docs);
           SystemData.find({ user_id: user.systemID, dataType: "Image Upload" })
             .sort({ created_at: -1 })
             .limit(1)
             .exec(function (err, imageDocs) {
-              docs[0].data[0]["PlantName"] = user.tray1;
-              docs[0].data[1]["PlantName"] = user.tray2;
-              console.log("IMAGEDOCS");
-              console.log(imageDocs);
-              if (imageDocs[0] != null) {
-                docs[0].data[0]["filePath"] = imageDocs[0].data.filePath;
-                docs[0].data[1]["filePath"] = imageDocs[0].data.filePath;
-                console.log(imageDocs[0].data.filePath);
-              }
-              res.send(docs);
+              SystemData.find({
+                user_id: user.systemID,
+                dataType: "System Information",
+              })
+                .sort({ created_at: -1 })
+                .limit(1)
+                .exec(function (err, systemInfo) {
+                  docs[0].data[0]["PlantName"] = user.tray1;
+                  docs[0].data[1]["PlantName"] = user.tray2;
+                  //console.log("IMAGEDOCS");
+                  //console.log(imageDocs);
+                  if (imageDocs[0] != null) {
+                    docs[0].data[0]["filePath"] = imageDocs[0].data.filePath;
+                    docs[0].data[1]["filePath"] = imageDocs[0].data.filePath;
+                    console.log(imageDocs[0].data.filePath);
+                  }
+                  console.log("System Information");
+                  console.log(systemInfo);
+                  var dataToSend = {
+                    user_id: docs[0].user_id,
+                    data: docs[0].data,
+                  };
+                  if (systemInfo[0] != null) {
+                    dataToSend["System Status"] = systemInfo[0].data.status;
+                    dataToSend["Solution 1"] = systemInfo[0].data.solution1;
+                    dataToSend["Solution 2"] = systemInfo[0].data.solution2;
+                    dataToSend["Solution 3"] = systemInfo[0].data.solution3;
+                  }
+                  res.send(dataToSend);
+                });
             });
         });
     })
