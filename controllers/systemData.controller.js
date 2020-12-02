@@ -72,6 +72,8 @@ exports.upload = (req, res) => {
         pythonFunction(s3Uploaded.Location).then((response) => {
           var response = response.replace(/(\r\n|\n|\r)/gm, "");
           var pixelCount = response.split(" ");
+          let growthStage1 = pixelCount[0] / 1800;
+          let growthStage2 = pixelCount[1] / 1800;
 
           const systemData = new SystemData({
             user_id: req.params.systemID,
@@ -85,6 +87,8 @@ exports.upload = (req, res) => {
                 tray22: pixelCount[3],
                 tray23: pixelCount[5],
               },
+              growthStage1: growthStage1,
+              growthStage2: growthStage2,
               filePath: s3Uploaded.Location,
             },
           });
