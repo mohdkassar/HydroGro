@@ -31,3 +31,4 @@ mongoose
 require("./routes/users.routes.js")(app);
 require("./routes/plants.routes.js")(app);
 require("./routes/systemData.routes.js")(app);
+require("./routes/orders.routes")(app);
