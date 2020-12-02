@@ -9,7 +9,7 @@ var client = mqtt.connect("http://34.201.69.234:1883", {
 });
 
 client.on("connect", function () {
-  client.subscribe("test", function (err) {
+  client.subscribe("message", function (err) {
     if (!err) {
       console.log("Subscribed to test");
     } else {
