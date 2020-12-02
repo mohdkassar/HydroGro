@@ -22,6 +22,7 @@ client.on("message", function (topic, message) {
   // message is Buffer
   console.log(topic);
   if (message.length > 0) {
+    console.log(message.toString);
     var mqttMessage = JSON.parse(message.toString());
     console.log(mqttMessage.message.localeCompare("SR"));
     if (mqttMessage.message.localeCompare("SR") == 0) {
