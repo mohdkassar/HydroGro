@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
 
 //IMAGE PROCESSING PYTHON ALGORITHM
 var pythonFunction = (imageURL) => {
-  console.log("IMAGE URL: " + imageURL);
+  //console.log("IMAGE URL: " + imageURL);
   return new Promise(function (success, nosuccess) {
     const { spawn } = require("child_process");
     const pythonProcess = spawn("python3", [
@@ -42,7 +42,7 @@ var pythonFunction = (imageURL) => {
     pythonProcess.stdout.setEncoding("utf8");
 
     pythonProcess.stdout.on("data", function (data) {
-      console.log("data");
+      //console.log("data");
 
       success(data);
     });
@@ -66,7 +66,7 @@ exports.upload = (req, res) => {
     s3Upload.single("image")(req, res, function (err) {
       //var extention = path.extname(req.file.originalname);
       var fileName = req.params.systemID + "-" + moment().format("MM-DD-YYYY");
-      console.log("FILE NAME: " + fileName);
+      //console.log("FILE NAME: " + fileName);
       //UPLOAD TO S3
       s3Controller.uploadFile(req.file, fileName, function (s3Uploaded) {
         pythonFunction(s3Uploaded.Location).then((response) => {
@@ -98,6 +98,7 @@ exports.upload = (req, res) => {
           systemData
             .save()
             .then((data) => {
+              console.log(data);
               res.send(data);
             })
             .catch((err) => {
