@@ -26,17 +26,46 @@ client.on("message", function (topic, message) {
     console.log(mqttMessage.message.localeCompare("SR"));
     if (mqttMessage.message.localeCompare("SR") == 0) {
       console.log("------");
+      console.log(data);
       const systemData = new SystemData({
         user_id: 1664,
         dataType: "Sensor Reading",
+        data: [
+          {
+            pH: mqttMessage.TR1[5],
+            EC: mqttMessage.TR1[3],
+            "Water Level": mqttMessage.TR1[1],
+            Temperature: mqttMessage.GR[1],
+          },
+          {
+            pH: mqttMessage.TR2[5],
+            EC: mqttMessage.TR2[3],
+            "Water Level": mqttMessage.TR2[1],
+            Temperature: mqttMessage.GR[1],
+          },
+        ],
+      });
+      systemData
+        .save()
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } else if (mqttMessage.message.localeCompare("SI") == 0) {
+      console.log("------");
+      console.log(data);
+      const systemData = new SystemData({
+        user_id: 1664,
+        dataType: "System Information",
         data: {
-          TR1: mqttMessage.TR1,
-          TR2: mqttMessage.TR2,
-          GR: mqttMessage.TR2,
+          status: mqttMessage.SS,
+          solution1: mqttMessage.BS[0],
+          solution2: mqttMessage.BS[1],
+          solution3: mqttMessage.BS[2],
         },
       });
-
-      // Save Note in the database
       systemData
         .save()
         .then((data) => {
