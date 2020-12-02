@@ -26,7 +26,6 @@ client.on("message", function (topic, message) {
     console.log(mqttMessage.message.localeCompare("SR"));
     if (mqttMessage.message.localeCompare("SR") == 0) {
       console.log("------");
-      console.log(data);
       const systemData = new SystemData({
         user_id: 1664,
         dataType: "Sensor Reading",
@@ -55,7 +54,6 @@ client.on("message", function (topic, message) {
         });
     } else if (mqttMessage.message.localeCompare("SI") == 0) {
       console.log("------");
-      console.log(data);
       const systemData = new SystemData({
         user_id: 1664,
         dataType: "System Information",
