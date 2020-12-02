@@ -163,10 +163,10 @@ exports.getLatestSystemValues = (req, res) => {
                   if (imageDocs[0] != null) {
                     docs[0].data[0]["filePath"] = imageDocs[0].data.filePath;
                     docs[0].data[1]["filePath"] = imageDocs[0].data.filePath;
-                    console.log(imageDocs[0].data.filePath);
+                    //console.log(imageDocs[0].data.filePath);
                   }
-                  console.log("System Information");
-                  console.log(systemInfo);
+                  //console.log("System Information");
+                  //console.log(systemInfo);
                   var dataToSend = {
                     user_id: docs[0].user_id,
                     data: docs[0].data,

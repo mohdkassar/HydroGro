@@ -20,13 +20,14 @@ client.on("connect", function () {
 
 client.on("message", function (topic, message) {
   // message is Buffer
-  console.log(topic);
+  console.log("MESSAGE FROM THE ESP");
   if (message.length > 0) {
     console.log(message.toString());
     try {
       var mqttMessage = JSON.parse(message.toString());
       console.log(mqttMessage.message.localeCompare("SR"));
       if (mqttMessage.message.localeCompare("SR") == 0) {
+        console.log("SENSOR READING");
         console.log("------");
         const systemData = new SystemData({
           user_id: 1664,
@@ -55,6 +56,8 @@ client.on("message", function (topic, message) {
             console.log(err.message);
           });
       } else if (mqttMessage.message.localeCompare("SI") == 0) {
+        console.log("SYSTEM INFORMATION");
+
         console.log("------");
         const systemData = new SystemData({
           user_id: 1664,
