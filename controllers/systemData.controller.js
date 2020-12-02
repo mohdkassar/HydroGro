@@ -143,6 +143,8 @@ exports.getLatestSystemValues = (req, res) => {
         .sort({ created_at: -1 })
         .limit(1)
         .exec(function (err, docs) {
+          console.log("DOCS");
+          Console.log(docs);
           SystemData.find({ user_id: user.systemID, dataType: "Image Upload" })
             .sort({ created_at: -1 })
             .limit(1)
