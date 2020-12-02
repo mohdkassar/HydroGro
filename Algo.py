@@ -4,8 +4,8 @@ import numpy as np
 #import matplotlib.pyplot as plt
 
 # green color rangle
-lower_green = np.array([60 - 15, 100, 100])
-upper_green = np.array([60 + 15, 255, 255])
+lower_green = np.array([60 - 22, 100, 100])
+upper_green = np.array([60 + 22, 255, 255])
 
 #img = cv2.imread("/home/ubuntu/HydroGrow/uploads/" + sys.argv[1])
 
