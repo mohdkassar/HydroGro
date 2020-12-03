@@ -81,6 +81,8 @@ exports.signin = (req, res) => {
 };
 
 exports.setup = (req, res) => {
+  console.log("System SetUp");
+  console.log("----------------------------------");
   User.findOne({ systemID: req.params.userID })
     .then((user) => {
       if (!user) {
@@ -104,35 +106,6 @@ exports.setup = (req, res) => {
                   message: "Plant not found with name " + req.body.tray2,
                 });
               }
-              // var mqttMessage = {
-              //   message: "SystemSetup",
-              //   Data: [
-              //     {
-              //       Tray1: {
-              //         EC1_min: profile1.EC1_min,
-              //         EC1_max: profile1.EC1_max,
-              //         // EC2_min: profile1.EC2_min,
-              //         // EC2_max: profile1.EC2_max,
-              //         // EC3_min: profile1.EC3_min,
-              //         // EC3_max: profile1.EC3_max,
-              //         pH_min: profile1.pH_min,
-              //         pH_max: profile1.pH_max,
-              //       },
-              //     },
-              //     {
-              //       Tray2: {
-              //         EC1_min: profile2.EC1_min,
-              //         EC1_max: profile2.EC1_max,
-              //         // EC2_min: profile2.EC2_min,
-              //         // EC2_max: profile2.EC2_max,
-              //         // EC3_min: profile2.EC3_min,
-              //         // EC3_max: profile2.EC3_max,
-              //         pH_min: profile2.pH_min,
-              //         pH_max: profile2.pH_max,
-              //       },
-              //     },
-              //   ],
-              // };
               var mqttMessage =
                 "1/" +
                 profile1.EC1_min +
@@ -155,6 +128,8 @@ exports.setup = (req, res) => {
                 user.systemID,
                 JSON.stringify(mqttMessage) //convert number to string
               );
+
+              console.log(mqttMessage);
               User.findOneAndUpdate(
                 { systemID: req.params.userID },
                 { tray1: req.body.tray1, tray2: req.body.tray2 },
@@ -166,6 +141,7 @@ exports.setup = (req, res) => {
                       message: "User not found with id " + req.params.userID,
                     });
                   }
+                  console.log({ Message: mqttMessage, User: user });
                   res.status(200).json({ Message: mqttMessage, User: user });
                 })
                 .catch((err) => {
