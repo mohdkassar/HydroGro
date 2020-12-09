@@ -77,6 +77,93 @@ exports.upload = (req, res) => {
           let growthStage2 =
             Math.max(pixelCount[1], pixelCount[3], pixelCount[5]) / 1800;
 
+          if (growthStage1 > 1800 || growthStage2 > 1800) {
+            console.log("System SetUp");
+            console.log("----------------------------------");
+            User.findOne({ systemID: req.params.userID })
+              .then((user) => {
+                if (!user) {
+                  return res.status(404).send({
+                    message: "User not found with id " + req.params.userID,
+                  });
+                }
+                plantProfileModels
+                  .findOne({ plant_name: user.tray1 })
+                  .then((profile1) => {
+                    if (!profile1) {
+                      return res.status(404).send({
+                        message: "Plant not found with name " + req.body.tray1,
+                      });
+                    }
+                    plantProfileModels
+                      .findOne({ plant_name: user.tray2 })
+                      .then((profile2) => {
+                        if (!profile2) {
+                          return res.status(404).send({
+                            message:
+                              "Plant not found with name " + req.body.tray2,
+                          });
+                        }
+                        var mqttMessage =
+                          "1/" +
+                          profile1.EC2_min +
+                          "/" +
+                          profile1.EC2_max +
+                          "/" +
+                          profile2.EC2_min +
+                          "/" +
+                          profile2.EC2_max +
+                          "/" +
+                          profile1.pH_min +
+                          "/" +
+                          profile1.pH_max +
+                          "/" +
+                          profile2.pH_min +
+                          "/" +
+                          profile2.pH_max;
+
+                        mqttClinet.publish(
+                          user.systemID,
+                          JSON.stringify(mqttMessage) //convert number to string
+                        );
+
+                        console.log(mqttMessage);
+                      })
+                      .catch((err) => {
+                        if (err.kind === "ObjectId") {
+                          return res.status(404).send({
+                            message:
+                              "User not found with name " + req.body.tray2,
+                          });
+                        }
+                        return res.status(500).send({
+                          message: "User not found with name " + req.body.tray2,
+                        });
+                      });
+                  })
+                  .catch((err) => {
+                    if (err.kind === "ObjectId") {
+                      return res.status(404).send({
+                        message: "User not found with name " + req.body.tray1,
+                      });
+                    }
+                    return res.status(500).send({
+                      message: "User not found with name " + req.body.tray1,
+                    });
+                  });
+              })
+              .catch((err) => {
+                if (err.kind === "ObjectId") {
+                  return res.status(404).send({
+                    message: "User not found with id " + req.params.userID,
+                  });
+                }
+                return res.status(500).send({
+                  message: "User not found with id " + req.params.userID,
+                });
+              });
+          }
+
           const systemData = new SystemData({
             user_id: req.params.systemID,
             dataType: "Image Upload",

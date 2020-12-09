@@ -1,11 +1,12 @@
 const SystemData = require("../models/systemData.models");
+require("dotenv").config();
 
 // MQTT broker
 var mqtt = require("mqtt");
-var client = mqtt.connect("http://34.201.69.234:1883", {
+var client = mqtt.connect(process.env.MQTT, {
   //open connection with your broker in AWS via websocket
-  username: "shabeb1", //authenticate your broker with username and password
-  password: "1234_Kassar",
+  username: process.env.MQTTUSERNAME, //authenticate your broker with username and password
+  password: process.env.MQTTPASSWORD,
 });
 
 client.on("connect", function () {

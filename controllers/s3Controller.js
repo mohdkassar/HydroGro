@@ -1,7 +1,8 @@
 const S3 = require("../awsS3Config");
+require("dotenv").config();
 
 // Enter the name of the bucket that you have created here
-const BUCKET_NAME = "shabeb";
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 const uploadFile = (file, name, callback) => {
   console.log("FILE TO BE UPLOADED ON S3: ");

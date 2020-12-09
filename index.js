@@ -3,11 +3,12 @@ var express = require("express");
 var cors = require("cors");
 var app = express();
 var mongoose = require("mongoose");
+require("dotenv").config();
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
   console.log("listening");
 });
 

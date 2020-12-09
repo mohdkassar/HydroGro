@@ -1,8 +1,9 @@
 const AWS = require("aws-sdk");
+require("dotenv").config();
 
 // Enter copied or downloaded access id and secret here
-const ID = "AKIA2XGNFJWUSRRAQNP4";
-const SECRET = "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";
+const ID = process.env.ID;
+const SECRET = process.env.SECRET;
 
 // Initializing S3 Interface
 const s3 = new AWS.S3({
